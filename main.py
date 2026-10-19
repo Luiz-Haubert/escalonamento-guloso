@@ -1,15 +1,3 @@
-"""
-Programa principal: roda os testes do trabalho de Algoritmos Gulosos.
-
-Como usar:
-    python main.py                        -> roda tudo (testes 1, 2, 3 e validação)
-    python main.py --teste 1              -> só o teste pequeno (passo a passo)
-    python main.py --teste 2              -> só o teste médio
-    python main.py --teste 3              -> só o teste grande (tabela de tempos)
-    python main.py --validar              -> compara o guloso com a força bruta em várias instâncias aleatórias
-    python main.py --arquivo minhas.csv   -> roda com tarefas de um arquivo CSV (nome,prazo,multa)
-"""
-
 import argparse
 import csv
 import os
@@ -26,11 +14,10 @@ from escalonamento import (
     conjunto_viavel,
 )
 
-SEMENTE = 2026  # semente fixa pra todo mundo gerar as mesmas instâncias
-PASTA = os.path.dirname(os.path.abspath(__file__))  # pra achar a pasta entradas/ de qualquer lugar
+SEMENTE = 2026  
+PASTA = os.path.dirname(os.path.abspath(__file__))  
 
 
-# ---------------------------------------------------------------- entrada de dados
 
 def carregar_csv(caminho):
     tarefas = []
@@ -40,18 +27,12 @@ def carregar_csv(caminho):
     return tarefas
 
 
-def gerar_tarefas(n, semente=SEMENTE):
-    """
-    Gera n tarefas aleatórias. O prazo vai de 1 até n/2, então sempre tem mais tarefa
-    do que tempo disponível e o algoritmo é obrigado a descartar várias (fica mais
-    interessante do que um caso em que tudo cabe). A multa vai de 1 a 1000.
-    """
+def gerar_tarefas(n, semente=SEMENTE): 
     rng = random.Random(semente)
     prazo_max = max(1, n // 2)
     return [Tarefa(f"T{i}", rng.randint(1, prazo_max), rng.randint(1, 1000)) for i in range(1, n + 1)]
 
 
-# ---------------------------------------------------------------- saída
 
 def imprimir_agenda(resultado):
     print(f"  {'tempo':>7} | {'tarefa':<8} | {'prazo':>5} | {'multa':>5} | situação")
@@ -63,7 +44,6 @@ def imprimir_agenda(resultado):
 
 
 def cronometrar(tarefas, repeticoes=3):
-    """Roda o guloso algumas vezes e devolve o menor tempo em ms (menos ruído do SO)."""
     melhor = float("inf")
     resultado = None
     for _ in range(repeticoes):
@@ -79,8 +59,6 @@ def titulo(texto):
     print(texto)
     print("=" * 70)
 
-
-# ---------------------------------------------------------------- testes
 
 def teste_pequeno():
     titulo("TESTE 1 - instância pequena (8 tarefas), passo a passo")
@@ -182,7 +160,6 @@ def rodar_arquivo(caminho):
     imprimir_agenda(resultado)
 
 
-# ---------------------------------------------------------------- main
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Escalonamento de tarefas com prazo e multa (guloso)")
