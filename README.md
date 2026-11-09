@@ -38,3 +38,33 @@ python main.py --arquivo entradas/exemplo_cormen.csv
 ```
 
 O CSV de entrada precisa ter o cabeçalho `nome,prazo,multa`.
+
+## Parte 2: Programação Dinâmica (Aula 10)
+
+Variante com **duração** diferente para cada tarefa (um processador, prazo e multa). Nesse caso o guloso deixa de ser sempre ótimo, então implementamos Programação Dinâmica.
+
+Arquivos novos:
+
+- `programacao_dinamica.py`: PD bottom-up (tabela), recursão simples (sem tabela, só pra comparar), guloso adaptado e força bruta
+- `main_pd.py`: testes da parte 2
+- `entradas/pd_teste1.csv`: instância pequena do Teste 1 (colunas `nome,duracao,prazo,multa`)
+
+Estado da PD é `(i, t)`, com as tarefas em ordem de prazo:
+
+```
+f(i, t) = max( f(i+1, t),  multa[i] + f(i+1, t + duracao[i]) )   # a segunda só se t + duracao[i] <= prazo[i]
+f(n, t) = 0
+```
+
+Como rodar:
+
+```
+python main_pd.py              # todos os testes
+python main_pd.py --teste 1    # pequeno, passo a passo
+python main_pd.py --teste 2    # médio (500 tarefas)
+python main_pd.py --teste 3    # grande (500 a 8000 tarefas), salva resultados_tempos_pd.csv
+python main_pd.py --validar    # compara PD e guloso com a força bruta em 500 instâncias
+python main_pd.py --arquivo entradas/pd_teste1.csv
+```
+
+Precisa de Python 3.10 ou mais novo (usa `insort` com `key=`).
